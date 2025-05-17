@@ -153,6 +153,26 @@ struct AreaToolbarView: View {
                     }
                     
                     Button {
+                        mapState.presentSteepnessPicker = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "angle")
+                            Text("filters.steepness")
+                        }
+                        .font(.callout.weight(.regular))
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .foregroundColor(!mapState.filters.steepness.isEmpty ? Color(UIColor.systemBackground) : .primary)
+                        .background(!mapState.filters.steepness.isEmpty ? Color.appGreen : Color(UIColor.systemBackground))
+                        .cornerRadius(32)
+                    }.sheet(isPresented: $mapState.presentSteepnessPicker, onDismiss: {
+                        
+                    }) {
+                        SteepnessPickerView(mapState: mapState)
+                            .presentationDetents([.medium]).presentationDragIndicator(.hidden) // TODO: use heights?
+                    }
+                    
+                    Button {
                         if(favorites.isEmpty) {
                             if mapState.filters.favorite {
                                 mapState.filters.favorite = false

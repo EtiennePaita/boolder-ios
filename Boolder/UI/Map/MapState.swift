@@ -30,6 +30,7 @@ class MapState : ObservableObject {
     @Published var presentAreaView = false
     @Published var presentCircuitPicker = false
     @Published var displayCircuitStartButton = false
+    @Published var presentSteepnessPicker = false
     
     func centerOnArea(_ area: Area) {
         centerOnArea = area
@@ -105,6 +106,11 @@ class MapState : ObservableObject {
                 }
             }
         }
+    }
+    
+    func selectSteepness(_ steepness: Set<Steepness>) {
+        filters.steepness = steepness
+        filtersRefresh()
     }
     
     private func centerOnProblem(_ problem: Problem) {

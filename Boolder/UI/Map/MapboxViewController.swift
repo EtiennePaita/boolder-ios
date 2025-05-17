@@ -692,6 +692,7 @@ class MapboxViewController: UIViewController {
             let gradeMax = filters.gradeRange?.max ?? Grade.max
             
             let gradesArray = (gradeMin...gradeMax).map{ $0.string }
+            let steepnessArray = filters.steepness.map(\.rawValue)
             
             try ["problems", "problems-texts", "problems-names", "problems-names-antioverlap"].forEach { layerId in
                 try mapView.mapboxMap.updateLayer(withId: layerId, type: CircleLayer.self) { layer in
@@ -714,11 +715,17 @@ class MapboxViewController: UIViewController {
                         ticks.map{Double($0.problemId)}
                     }
                     
+                    let steepnessFilter = Exp(.inExpression) {
+                        Exp(.get) { "steepness" }
+                        steepnessArray
+                    }
+                    
                     layer.filter = Exp(.all) {
                         gradeFilter
                         filters.popular ? popularFilter : Exp(.literal) { true }
                         filters.favorite ? favoriteFilter : Exp(.literal) { true }
                         filters.ticked ? tickFilter : Exp(.literal) { true }
+                        (!filters.steepness.isEmpty) ? steepnessFilter : Exp(.literal) { true }
                     }
                 }
             }
